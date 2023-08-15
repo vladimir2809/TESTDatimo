@@ -16,6 +16,8 @@ function Kvadr(x,y, numColor)  {
     this.y = y;
     this.width= 80;
     this.height = 80;
+    this.addX = null;
+    this.addY = null;
     this.numColor = numColor; 
 }
 var kvadrArr = [];
@@ -68,17 +70,84 @@ function update()
             let dx = mouseX - mouseOldX;
             let dy = mouseY - mouseOldY;
             let flag = false;
-
-            kvadrArr[numK].x += dx;
-            kvadrArr[numK].y += dy;
-            if (kvadrArr[numK].x<0 || kvadrArr[numK].x+kvadrArr[numK].width>mapWidth ||
-                kvadrArr[numK].y<0 || kvadrArr[numK].y+kvadrArr[numK].height>mapHeight)
+            if (together==false)
             {
-                kvadrArr[numK].x -= dx;
-                kvadrArr[numK].y -= dy;
-               // numSelectKvadr = null;
+
+            
+                kvadrArr[numK].x += dx;
+                kvadrArr[numK].y += dy;
+                if (kvadrArr[numK].x<0 || kvadrArr[numK].x+kvadrArr[numK].width>mapWidth ||
+                    kvadrArr[numK].y<0 || kvadrArr[numK].y+kvadrArr[numK].height>mapHeight)
+                {
+                    kvadrArr[numK].x -= dx;
+                    kvadrArr[numK].y -= dy;
+                    // numSelectKvadr = null;
+                }
             }
-           if (together==false)
+            else
+            {
+                for (let i = 0; i < kvadrArr.length;i++)
+                {
+                    kvadrArr[i].x += dx;
+                    kvadrArr[i].y += dy;
+                    let flag = false;
+                    for (let j = 0; j < kvadrArr.length;j++)
+                    {    
+                        if (kvadrArr[j].x<0 || kvadrArr[j].x+kvadrArr[j].width>mapWidth ||
+                            kvadrArr[j].y<0 || kvadrArr[j].y+kvadrArr[j].height>mapHeight)
+                        
+                        //if (kvadrArr[i].x<0 || kvadrArr[i].x+kvadrArr[i].width>mapWidth ||
+                        //    kvadrArr[i].y<0 || kvadrArr[i].y+kvadrArr[i].height>mapHeight)
+                        {
+                            flag = true;
+                        }
+                    }   
+                    if (flag==true)
+                    {
+                       // kvadrArr[i].x -= dx;
+                        //kvadrArr[i].y -= dy;
+                        if (kvadrArr[i].x<0 || mouseX<0 )
+                        {
+                            kvadrArr[i].x = 0;
+                         //   numSelectKvadr = null;
+                        }
+                        if (kvadrArr[i].x>mapWidth || mouseX > mapWidth)
+                        {
+                            kvadrArr[i].x = mapWidth-kvadrArr[i].width;
+                           // numSelectKvadr = null;
+                        }
+                        if (kvadrArr[i].y<0 ||  mouseY<0)
+                        {
+                            kvadrArr[i].y = 0;
+                           // numSelectKvadr = null;
+                        }
+                        if (kvadrArr[i].y>mapHeight || mouseY>mapHeight)
+                        {
+                            kvadrArr[i].y = mapHeight-kvadrArr[i].height;
+                           //// numSelectKvadr = null;
+                        }    
+                        if (i==0)
+                        {
+                            kvadrArr[0].x = kvadrArr[1].x - kvadrArr[0].addX;  
+                            kvadrArr[0].y = kvadrArr[1].y - kvadrArr[0].addY;
+                        }
+                        if (i==1)
+                        {
+                            kvadrArr[1].x = kvadrArr[0].x - kvadrArr[1].addX;  
+                            kvadrArr[1].y = kvadrArr[0].y - kvadrArr[1].addY;
+                        }
+                    }
+
+                  
+                        if (mouseX<0 || mouseX>mapWidth || mouseY<0 || mouseY>mapHeight)
+                        {
+                          //  break;;
+                        }
+                }
+
+            }
+
+            if (together==false)
             {
                 for (let i = 0; i < kvadrArr.length;i++)
                 {
@@ -121,31 +190,42 @@ function update()
 
                     }
                 }
+                if (together==true)
+                {
+                    kvadrArr[0].addX = kvadrArr[1].x - kvadrArr[0].x;
+                    kvadrArr[0].addY = kvadrArr[1].y - kvadrArr[0].y;
+                    kvadrArr[1].addX = kvadrArr[0].x - kvadrArr[1].x;
+                    kvadrArr[1].addY = kvadrArr[0].y - kvadrArr[1].y;
+                }
             }
-            if (mouseX<0)
-            {
-                kvadrArr[numK].x = 0;
-             //   numSelectKvadr = null;
+            if (together==false)
+            {    
+                if (mouseX<0)
+                {
+                    kvadrArr[numK].x = 0;
+                    //   numSelectKvadr = null;
+                }
+                if (mouseX>mapWidth)
+                {
+                    kvadrArr[numK].x = mapWidth-kvadrArr[numK].width;
+                    // numSelectKvadr = null;
+                }
+                if (mouseY<0)
+                {
+                    kvadrArr[numK].y = 0;
+                    // numSelectKvadr = null;
+                }
+                if (mouseY>mapHeight)
+                {
+                    kvadrArr[numK].y = mapHeight-kvadrArr[numK].height;
+                    //// numSelectKvadr = null;
+                }  
+                if (mouseX<0 || mouseX>mapWidth || mouseY<0 || mouseY>mapHeight)
+                {
+                    numSelectKvadr = null;
+                }
             }
-            if (mouseX>mapWidth)
-            {
-                kvadrArr[numK].x = mapWidth-kvadrArr[numK].width;
-               // numSelectKvadr = null;
-            }
-            if (mouseY<0)
-            {
-                kvadrArr[numK].y = 0;
-               // numSelectKvadr = null;
-            }
-            if (mouseY>mapHeight)
-            {
-                kvadrArr[numK].y = mapHeight-kvadrArr[numK].height;
-               //// numSelectKvadr = null;
-            }
-            if (mouseX<0 || mouseX>mapWidth || mouseY<0 || mouseY>mapHeight)
-            {
-                numSelectKvadr = null;
-            }
+
             
 
         }  
