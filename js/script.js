@@ -1,0 +1,199 @@
+var mapWidth = 800;
+var mapHeight = 800;
+var canvas = null;
+var context = null;
+var mouseX = 0;
+var mouseY = 0;
+var mouseOldX = 0;
+var mouseOldY = 0;
+var mauseLeftPress = false;
+var numSelectKvadr = null;
+var together = false;
+var colors = ['rgba(255,0,0,0.5)', 'rgba(0,255,0,0.5)', 'rgba(0,0,255,0.5)'];
+var colors2 = ['rgb(255,0,0)', 'rgb(0,255,0)', 'rgb(0,0,255)'];
+function Kvadr(x,y, numColor)  {
+    this.x = x;
+    this.y = y;
+    this.width= 80;
+    this.height = 80;
+    this.numColor = numColor; 
+}
+var kvadrArr = [];
+function create()
+{
+    canvas = document.getElementById("canvas");
+    context = canvas.getContext("2d");
+    canvas.setAttribute('width',mapWidth);
+    canvas.setAttribute('height',mapHeight);
+    kvadrArr[0] = new Kvadr(100,100,0);
+    kvadrArr[1] = new Kvadr(500,100,1);
+
+}
+window.addEventListener('load', function () {
+    create();
+    console.log(kvadrArr);
+    setInterval(function () {
+        drawAll();
+        update();
+    }, 16);
+});
+function drawAll() 
+{
+    context.fillStyle='rgb(220,220,220)';
+    context.fillRect(0,0,mapWidth,mapHeight);// очистка экрана
+    for (let i = 0; i < kvadrArr.length;i++)
+    {
+        kvadr = kvadrArr[i];
+        context.fillStyle = colors[kvadr.numColor];
+
+        context.fillRect(kvadr.x, kvadr.y, kvadr.width, kvadr.height);
+        if (numSelectKvadr==i)
+        {    
+            context.lineWidth = 3;
+            context.setLineDash([4, 4]); 
+            context.strokeStyle = colors2[kvadr.numColor];
+            context.lineDashOffset = 2;//-offset;
+            context.strokeRect(kvadr.x, kvadr.y, kvadr.width, kvadr.height);
+        }
+    }
+}
+function update()
+{
+    if (numSelectKvadr!=null)
+    {
+        let numK = numSelectKvadr;
+        let dist = 50;
+        if (mouseLeftPress==true)
+        {
+            let dx = mouseX - mouseOldX;
+            let dy = mouseY - mouseOldY;
+            let flag = false;
+
+            kvadrArr[numK].x += dx;
+            kvadrArr[numK].y += dy;
+            if (kvadrArr[numK].x<0 || kvadrArr[numK].x+kvadrArr[numK].width>mapWidth ||
+                kvadrArr[numK].y<0 || kvadrArr[numK].y+kvadrArr[numK].height>mapHeight)
+            {
+                kvadrArr[numK].x -= dx;
+                kvadrArr[numK].y -= dy;
+               // numSelectKvadr = null;
+            }
+           if (together==false)
+            {
+                for (let i = 0; i < kvadrArr.length;i++)
+                {
+                    if (i!=numSelectKvadr)
+                    {
+                        if (kvadrArr[i].x+kvadrArr[i].width>=kvadrArr[numK].x &&
+                            kvadrArr[i].x<kvadrArr[numK].x+kvadrArr[numK].width)
+                        {
+                            if (kvadrArr[i].y+kvadrArr[i].height<kvadrArr[numK].y+dist && 
+                                kvadrArr[i].y+kvadrArr[i].height>kvadrArr[numK].y-dist)
+                            {
+                                kvadrArr[i].y = kvadrArr[numK].y - kvadrArr[numK].height;
+                                together = true;
+                            }
+                            else if (kvadrArr[i].y-kvadrArr[numK].y<kvadrArr[numK].height+dist &&
+                                kvadrArr[i].y-kvadrArr[numK].y>kvadrArr[numK].height-dist)
+                            {
+                                kvadrArr[i].y = kvadrArr[numK].y+kvadrArr[numK].height;
+                                together = true;
+                            }
+                            console.log(1);
+                        }
+                        if (kvadrArr[i].y+kvadrArr[i].height>=kvadrArr[numK].y &&
+                            kvadrArr[i].y<kvadrArr[numK].y+kvadrArr[numK].height)
+                        {
+                            if (kvadrArr[i].x+kvadrArr[i].width<kvadrArr[numK].x+dist && 
+                                kvadrArr[i].x+kvadrArr[i].width>kvadrArr[numK].x-dist)
+                            {
+                                kvadrArr[i].x = kvadrArr[numK].x - kvadrArr[numK].width;
+                                together = true;
+                            }
+                            else if (kvadrArr[i].x-kvadrArr[numK].x<kvadrArr[numK].width+dist &&
+                                kvadrArr[i].x-kvadrArr[numK].x>kvadrArr[numK].width-dist)
+                            {
+                                kvadrArr[i].x = kvadrArr[numK].x+kvadrArr[numK].width;
+                                together = true;
+                            }
+                            console.log(1);
+                        }
+
+                    }
+                }
+            }
+            if (mouseX<0)
+            {
+                kvadrArr[numK].x = 0;
+             //   numSelectKvadr = null;
+            }
+            if (mouseX>mapWidth)
+            {
+                kvadrArr[numK].x = mapWidth-kvadrArr[numK].width;
+               // numSelectKvadr = null;
+            }
+            if (mouseY<0)
+            {
+                kvadrArr[numK].y = 0;
+               // numSelectKvadr = null;
+            }
+            if (mouseY>mapHeight)
+            {
+                kvadrArr[numK].y = mapHeight-kvadrArr[numK].height;
+               //// numSelectKvadr = null;
+            }
+            if (mouseX<0 || mouseX>mapWidth || mouseY<0 || mouseY>mapHeight)
+            {
+                numSelectKvadr = null;
+            }
+            
+
+        }  
+
+    }  
+    mouseOldX = mouseX;
+    mouseOldY = mouseY;
+}
+window.addEventListener('mousedown', function () {
+    if (event.which==1) mouseLeftPress=true;
+    for (let i = 0; i < kvadrArr.length;i++)
+    {
+        if (checkInObj(kvadrArr[i],mouseX,mouseY)==true)  
+        {
+            numSelectKvadr = i;
+            break;
+        }
+
+           
+    }
+
+});
+window.addEventListener('mouseup', function () {
+    if (event.which==1)
+    {
+        mouseLeftPress=false;
+        //mouseClick=true;
+        //setTimeout(function () {
+        //    if (mouseClick == true) mouseClick = false;
+        //}, 100);
+    } 
+});
+document.addEventListener('mousemove', function (e) {
+    let mouseOfsX=(window.innerWidth - mapWidth)/2
+    let mouseOfsY=(window.innerHeight - mapHeight)/2;
+    mouseX = (event.clientX-mouseOfsX);
+    mouseY = (event.clientY-mouseOfsY);
+    //mouseX =/*event.offsetX*/e.pageX - e.target.offsetLeft// event.x;
+    //mouseY = /*event.offsetY*/e.pageY - e.target.offsetTop//event.y;
+   
+   // console.log(mouseX+' '+ mouseY);
+});
+function checkInObj(obj,x,y)
+{
+    if (x>obj.x && x<obj.x+obj.width &&
+            y>obj.y && y<obj.y+obj.height )
+    {
+        return true;
+    }
+    return false;
+}
