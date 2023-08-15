@@ -84,13 +84,15 @@ function update()
                     // numSelectKvadr = null;
                 }
             }
-            else
+            else  if (numSelectKvadr!=null)
             {
+                let flag = false;
+                let num = null;
                 for (let i = 0; i < kvadrArr.length;i++)
                 {
                     kvadrArr[i].x += dx;
                     kvadrArr[i].y += dy;
-                    let flag = false;
+                    
                     for (let j = 0; j < kvadrArr.length;j++)
                     {    
                         if (kvadrArr[j].x<0 || kvadrArr[j].x+kvadrArr[j].width>mapWidth ||
@@ -100,50 +102,71 @@ function update()
                         //    kvadrArr[i].y<0 || kvadrArr[i].y+kvadrArr[i].height>mapHeight)
                         {
                             flag = true;
+                            num = j;
+                            break;
                         }
-                    }   
-                    if (flag==true)
+                    }  
+                }
+                if (flag==true)
+                {
+                    let flag2 = false;
+                  //  kvadrArr[num].x += dx;
+                  //  kvadrArr[num].y += dy;
+                    if (/*kvadrArr[num].x<0 ||*/ mouseX<1 )
                     {
-                       // kvadrArr[i].x -= dx;
-                        //kvadrArr[i].y -= dy;
-                        if (kvadrArr[i].x<0 || mouseX<0 )
-                        {
-                            kvadrArr[i].x = 0;
-                         //   numSelectKvadr = null;
+                        kvadrArr[num].x = 0;
+                        flag2 = true;
+                        //   numSelectKvadr = null;
+                    }
+                    if (/*kvadrArr[num].x>mapWidth ||*/ mouseX > mapWidth)
+                    {
+                        kvadrArr[num].x = mapWidth-kvadrArr[num].width;
+                        flag2 = true;
+                        // numSelectKvadr = null;
+                    }
+                    if (/*kvadrArr[num].y<0 ||  */ mouseY<1)
+                    {
+                        kvadrArr[num].y = 0;
+                        flag2 = true;
+                        // numSelectKvadr = null;
+                    }
+                    if (/*kvadrArr[num].y>mapHeight || */mouseY>mapHeight)
+                    {
+                        kvadrArr[num].y = mapHeight-kvadrArr[num].height;
+                        flag2 = true;
+                        //// numSelectKvadr = null;
+                    }    
+                    if (flag2 == true || num!=null)
+                    {
+                        for (let j = 0; j < kvadrArr.length;j++)
+                        {        
+                            kvadrArr[j].x -= dx;
+                            kvadrArr[j].y -= dy;
                         }
-                        if (kvadrArr[i].x>mapWidth || mouseX > mapWidth)
-                        {
-                            kvadrArr[i].x = mapWidth-kvadrArr[i].width;
-                           // numSelectKvadr = null;
-                        }
-                        if (kvadrArr[i].y<0 ||  mouseY<0)
-                        {
-                            kvadrArr[i].y = 0;
-                           // numSelectKvadr = null;
-                        }
-                        if (kvadrArr[i].y>mapHeight || mouseY>mapHeight)
-                        {
-                            kvadrArr[i].y = mapHeight-kvadrArr[i].height;
-                           //// numSelectKvadr = null;
-                        }    
-                        if (i==0)
+                        
+                        if (num==0)
                         {
                             kvadrArr[0].x = kvadrArr[1].x - kvadrArr[0].addX;  
                             kvadrArr[0].y = kvadrArr[1].y - kvadrArr[0].addY;
                         }
-                        if (i==1)
+                        if (num==1)
                         {
                             kvadrArr[1].x = kvadrArr[0].x - kvadrArr[1].addX;  
                             kvadrArr[1].y = kvadrArr[0].y - kvadrArr[1].addY;
                         }
-                    }
-
-                  
+                        num = null;
+                     //  numSelectKvadr = null; 
                         if (mouseX<0 || mouseX>mapWidth || mouseY<0 || mouseY>mapHeight)
                         {
                           //  break;;
+                      //      numSelectKvadr = null; 
                         }
+                    }
                 }
+
+                  
+                       
+                
 
             }
 
@@ -235,7 +258,7 @@ function update()
     mouseOldY = mouseY;
 }
 window.addEventListener('mousedown', function () {
-    if (event.which==1) mouseLeftPress=true;
+    if (event.which == 1) mouseLeftPress = true;
     for (let i = 0; i < kvadrArr.length;i++)
     {
         if (checkInObj(kvadrArr[i],mouseX,mouseY)==true)  
