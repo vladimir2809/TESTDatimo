@@ -9,6 +9,7 @@ var mouseOldY = 0;
 var mauseLeftPress = false;
 var numSelectKvadr = null;
 var together = false;
+var grabKvadrMouse = false;
 var colors = ['rgba(255,0,0,0.5)', 'rgba(0,255,0,0.5)', 'rgba(0,0,255,0.5)'];
 var colors2 = ['rgb(255,0,0)', 'rgb(0,255,0)', 'rgb(0,0,255)'];
 function Kvadr(x,y, numColor)  {
@@ -108,7 +109,7 @@ function update()
         }    
         console.log(kvadrArr);
     }
-    if (numSelectKvadr!=null)
+    if (numSelectKvadr!=null && grabKvadrMouse==true)
     {
         let numK = numSelectKvadr;
         if (mouseLeftPress==true)
@@ -272,6 +273,7 @@ window.addEventListener('mousedown', function () {
         if (checkInObj(kvadrArr[i],mouseX,mouseY)==true)  
         {
             numSelectKvadr = i;
+            grabKvadrMouse = true;
             break;
         }
 
@@ -282,6 +284,7 @@ window.addEventListener('mousedown', function () {
 window.addEventListener('mouseup', function () {
     if (event.which==1)
     {
+        grabKvadrMouse = false;
         mouseLeftPress=false;
         //mouseClick=true;
         //setTimeout(function () {
