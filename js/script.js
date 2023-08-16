@@ -182,7 +182,7 @@ function update()
         }    
         console.log(kvadrArr);
     }
-    if (numSelectKvadr!=null && grabKvadrMouse==true)
+    if (/*numSelectKvadr!=null &&*/ grabKvadrMouse==true)
     {
         let numK = numSelectKvadr;
         if (mouseLeftPress==true)
@@ -210,11 +210,11 @@ function update()
                 console.log("begin");
                 for (let i = 0; i < kvadrArr.length;i++)
                 {
-                    let value = 60;
-                    if (dx > value) dx = value;
-                    if (dx < -value) dx = -value;
-                    if (dy > value) dy = value;
-                    if (dy < -value) dy = -value;
+                    //let value = 60;
+                    //if (dx > value) dx = value;
+                    //if (dx < -value) dx = -value;
+                    //if (dy > value) dy = value;
+                    //if (dy < -value) dy = -value;
                   //  console.log('dx: ' + dx +' dy: '+dy)
                     if ((mouseX<0 || mouseX>mapWidth || mouseY<0 || mouseY>mapHeight)==false)
                     {
@@ -340,17 +340,20 @@ function update()
     mouseOldY = mouseY;
 }
 window.addEventListener('mousedown', function () {
-    if (event.which == 1) mouseLeftPress = true;
-    for (let i = 0; i < kvadrArr.length;i++)
+    if (event.which == 1)
     {
-        if (checkInObj(kvadrArr[i],mouseX,mouseY)==true)  
+        mouseLeftPress = true;
+        for (let i = 0; i < kvadrArr.length;i++)
         {
-            numSelectKvadr = i;
-            grabKvadrMouse = true;
-            break;
-        }
+            if (checkInObj(kvadrArr[i],mouseX,mouseY)==true)  
+            {
+                numSelectKvadr = i;
+                grabKvadrMouse = true;
+                break;
+            }
 
            
+        }
     }
 
 });
