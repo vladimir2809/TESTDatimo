@@ -1,4 +1,4 @@
-var mapWidth = 800;
+﻿var mapWidth = 800;
 var mapHeight = 800;
 var canvas = null;
 var context = null;
@@ -12,6 +12,7 @@ var together = false;
 var grabKvadrMouse = false;
 var colors = ['rgba(255,0,0,0.5)', 'rgba(0,255,0,0.5)', 'rgba(0,0,255,0.5)'];
 var colors2 = ['rgb(255,0,0)', 'rgb(0,255,0)', 'rgb(0,0,255)'];
+var interface = null;
 function Kvadr(x,y, numColor)  {
     this.x = x;
     this.y = y;
@@ -22,6 +23,63 @@ function Kvadr(x,y, numColor)  {
     this.rect = false;
     this.numColor = numColor; 
 }
+function Interface() {
+    this.x = 550;
+    this.y = 50;
+    this.width = 200;
+    this.height = 100;
+    this.button = {
+        width: 130,
+        height: 30,
+        x: 35,//this.x + this.width/2 - this.button.width / 2,
+        y: 60,
+        text: 'Разъединить',
+        textSize: 17,
+
+
+    }
+    this.colorButton = {
+        x:null,
+        y:32,
+        color:null,
+        radius: 20,
+    }
+    this.colorButtonArr = [];
+    this.init=function()
+    {
+        for (let i = 0; i < 3;i++)
+        {
+            colorBut = clone(this.colorButton);
+            colorBut.x = this.x + i * 50+50;
+            colorBut.y= this.y+colorBut.y;
+            colorBut.color = colors2[i];
+            this.colorButtonArr.push(colorBut);
+        }
+        this.button.x = this.x + this.button.x;
+        this.button.y = this.y + this.button.y;
+    }
+    this.draw=function()
+    {
+        context.fillStyle = 'rgba(255,255,255,0.4)';
+        context.fillRect(this.x,this.y,this.width,this.height);
+        for (let i = 0; i < this.colorButtonArr.length;i++)
+        {
+            context.beginPath();
+            context.fillStyle = this.colorButtonArr[i].color;
+            context.arc(this.colorButtonArr[i].x, this.colorButtonArr[i].y, 
+                        this.colorButtonArr[i].radius, 0, 2 * Math.PI);
+            context.fill();
+            context.stroke();
+        }
+        drawButton(this.button);
+    }
+    this.update=function()
+    {
+
+    }
+    
+    
+}
 var kvadrArr = [];
 function create()
 {
@@ -31,6 +89,8 @@ function create()
     canvas.setAttribute('height',mapHeight);
     kvadrArr[0] = new Kvadr(100,100,0);
     kvadrArr[1] = new Kvadr(500,100,1);
+    interface = new Interface();
+    interface.init();
 
 }
 window.addEventListener('load', function () {
@@ -44,7 +104,7 @@ window.addEventListener('load', function () {
 function drawAll() 
 {
     context.fillStyle='rgb(220,220,220)';
-    context.fillRect(0,0,mapWidth,mapHeight);// ������� ������
+    context.fillRect(0,0,mapWidth,mapHeight);// очистка экрана
     for (let i = 0; i < kvadrArr.length;i++)
     {
         kvadr = kvadrArr[i];
@@ -53,13 +113,26 @@ function drawAll()
         context.fillRect(kvadr.x, kvadr.y, kvadr.width, kvadr.height);
         if (numSelectKvadr==i)
         {    
+            context.save();
             context.lineWidth = 3;
             context.setLineDash([4, 4]); 
             context.strokeStyle = colors2[kvadr.numColor];
             context.lineDashOffset = 2;//-offset;
             context.strokeRect(kvadr.x, kvadr.y, kvadr.width, kvadr.height);
+            context.restore();
         }
+        interface.draw();
     }
+}
+function drawButton (obj)
+{
+    context.strokeStyle = obj.color;
+    context.strokeRect(obj.x, obj.y, obj.width, obj.height);
+    let str= obj.text;
+    context.font =  obj.textSize+'px Arial';
+    let widthText = context.measureText(str).width;
+    context.fillStyle = obj.textColor;
+    context.fillText(str,obj.x+ obj.width / 2 - widthText / 2, obj.y+obj.textSize*1.2);
 }
 function update()
 {
@@ -254,7 +327,7 @@ function update()
                 }  
                 if (mouseX<0 || mouseX>mapWidth || mouseY<0 || mouseY>mapHeight)
                 {
-                    numSelectKvadr = null;
+                  //  numSelectKvadr = null;
                 }
             }
 
@@ -302,6 +375,23 @@ document.addEventListener('mousemove', function (e) {
    
    // console.log(mouseX+' '+ mouseY);
 });
+// функция клонирования обьектов
+function clone(obj) {
+    if (null == obj || "object" != typeof obj) return obj;
+    var copy = obj.constructor();
+    for (var attr in obj) {
+        if (obj.hasOwnProperty(attr)) copy[attr] = obj[attr];
+    }
+    return copy;
+}// функция клонирования обьектов
+function clone(obj) {
+    if (null == obj || "object" != typeof obj) return obj;
+    var copy = obj.constructor();
+    for (var attr in obj) {
+        if (obj.hasOwnProperty(attr)) copy[attr] = obj[attr];
+    }
+    return copy;
+}
 function checkInObj(obj,x,y)
 {
     if (x>obj.x && x<obj.x+obj.width &&
