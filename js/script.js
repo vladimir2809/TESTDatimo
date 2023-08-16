@@ -62,10 +62,55 @@ function drawAll()
 }
 function update()
 {
+    function calcKvadr(num)
+    {
+        let oldX = kvadrArr[0].x;
+        let oldY = kvadrArr[0].y;
+        if (num==1)
+        {
+            kvadrArr[0].x = kvadrArr[1].x + kvadrArr[0].addX;  
+            kvadrArr[0].y = kvadrArr[1].y + kvadrArr[0].addY;
+        }
+        if (num==0)
+        {
+            kvadrArr[1].x = kvadrArr[0].x + kvadrArr[1].addX;  
+            kvadrArr[1].y = kvadrArr[0].y + kvadrArr[1].addY;
+          //  kvadrArr[1].x = oldX + kvadrArr[1].addX;  
+            //kvadrArr[1].y = oldY + kvadrArr[1].addY;
+        }
+        console.log("hello"+ num);
+    }
+    function calcCollision (i)
+    {                    
+        if (kvadrArr[i].x<0 || mouseX<0 )
+        {
+            kvadrArr[i].x = 0;
+            calcKvadr(i);
+
+        }
+         if (kvadrArr[i].x+kvadrArr[i].width>mapWidth || mouseX > mapWidth)
+        {
+            kvadrArr[i].x = mapWidth-kvadrArr[i].width;
+             calcKvadr(i);
+
+        }
+          if (kvadrArr[i].y<0  ||  mouseY<0)
+        {
+            kvadrArr[i].y = 0;
+            calcKvadr(i);
+
+        }
+         if (kvadrArr[i].y+kvadrArr[i].height>mapHeight || mouseY>mapHeight)
+        {
+            kvadrArr[i].y = mapHeight-kvadrArr[i].height;
+            calcKvadr(i);
+
+        }    
+        console.log(kvadrArr);
+    }
     if (numSelectKvadr!=null)
     {
         let numK = numSelectKvadr;
-        let dist = 50;
         if (mouseLeftPress==true)
         {
             let dx = mouseX - mouseOldX;
@@ -82,136 +127,58 @@ function update()
                 {
                     kvadrArr[numK].x -= dx;
                     kvadrArr[numK].y -= dy;
-                    // numSelectKvadr = null;
                 }
             }
-            else  //if (numSelectKvadr!=null)
+            else  
             {
                 let flag = false;
                 let num = null;
+                console.log("begin");
                 for (let i = 0; i < kvadrArr.length;i++)
                 {
-                    let value = 70;
+                    let value = 60;
                     if (dx > value) dx = value;
                     if (dx < -value) dx = -value;
                     if (dy > value) dy = value;
                     if (dy < -value) dy = -value;
                   //  console.log('dx: ' + dx +' dy: '+dy)
-                   // if ((mouseX<0 || mouseX>mapWidth || mouseY<0 || mouseY>mapHeight)==false)
+                    if ((mouseX<0 || mouseX>mapWidth || mouseY<0 || mouseY>mapHeight)==false)
                     {
 
                     
                         kvadrArr[i].x += dx;
                         kvadrArr[i].y += dy;
                     }
+                }
+                for (let i = 0; i < kvadrArr.length;i++)
+                {
                     kvadrArr[i].rect = false;
-                   // for (let j = 0; j < kvadrArr.length;j++)
-                    //{    
-                        //f (kvadrArr[j].x<0 || kvadrArr[j].x+kvadrArr[j].width>mapWidth ||
-                        //    kvadrArr[j].y<0 || kvadrArr[j].y+kvadrArr[j].height>mapHeight)
-                        //i
+            
                         if (kvadrArr[i].x<0 || kvadrArr[i].x+kvadrArr[i].width>mapWidth ||
                             kvadrArr[i].y<0 || kvadrArr[i].y+kvadrArr[i].height>mapHeight)
                         {
                             flag = true;
                             num = i;
-                            kvadrArr[i].rect = true;
-                            console.log(kvadrArr);
-                            break;
+                            kvadrArr[i].rect = true;                        
+                            calcCollision(num);                            
+                            console.log('rect: '+i )
+                            //break;
                         }
-                    //}  
                 }
-                if (flag==true)
-                {
-                    
-                    let i = num;
-                   // for (let i = 0; i < kvadrArr.length;i++)
-                  //  if (kvadrArr[i].rect==true)
-                    {
+                //if (flag==true)
+                //{
 
-                    
-                        let flag2 = false;
-                      //  kvadrArr[num].x += dx;
-                      //  kvadrArr[num].y += dy;
-
-                        if (kvadrArr[i].x<0 || mouseX<0 )
-                        {
-                            kvadrArr[i].x = 0;
-                            flag2 = true;
-                            //   numSelectKvadr = null;
-                        }
-                         if (kvadrArr[i].x+kvadrArr[i].width>mapWidth || mouseX > mapWidth)
-                        {
-                            kvadrArr[i].x = mapWidth-kvadrArr[i].width;
-                            flag2 = true;
-                            // numSelectKvadr = null;
-                        }
-                          if (kvadrArr[i].y<0  ||  mouseY<0)
-                        {
-                            kvadrArr[i].y = 0;
-                            flag2 = true;
-                            // numSelectKvadr = null;
-                        }
-                         if (kvadrArr[i].y+kvadrArr[i].height>mapHeight || mouseY>mapHeight)
-                        {
-                            kvadrArr[i].y = mapHeight-kvadrArr[i].height;
-                            flag2 = true;
-                            //// numSelectKvadr = null;
-                        }    
-                       // console.log(flag2+' num '+num);
-                        //if (flag2==true)
-                        //{
-                        //    if (num==1)
-                        //    {
-                        //        kvadrArr[0].x = kvadrArr[1].x - kvadrArr[0].addX;  
-                        //        kvadrArr[0].y = kvadrArr[1].y - kvadrArr[0].addY;
-                        //    }
-                        //    if (num==0)
-                        //    {
-                        //        kvadrArr[1].x = kvadrArr[0].x - kvadrArr[1].addX;  
-                        //        kvadrArr[1].y = kvadrArr[0].y - kvadrArr[1].addY;
-                        //    }
-                        //}
-                        //else
-                        if (flag2 == true /*|| num!=null*/)
-                        {
-                            //if (flag2==false)
-                            for (let j = 0; j < kvadrArr.length;j++)
-                            {        
-                              //  kvadrArr[j].x -= dx;
-                                //kvadrArr[j].y -= dy;
-                            }
-                        
-                           // if (i==1)
-                            {
-                                kvadrArr[0].x = kvadrArr[1].x + kvadrArr[0].addX;  
-                                kvadrArr[0].y = kvadrArr[1].y + kvadrArr[0].addY;
-                            }
-                          //  if (i==0)
-                            {
-                                kvadrArr[1].x = kvadrArr[0].x + kvadrArr[1].addX;  
-                                kvadrArr[1].y = kvadrArr[0].y + kvadrArr[1].addY;
-                            }
-                            //num = null;
-                           //  numSelectKvadr = null; 
-                        
-                        }  
-                    }
-                    if (mouseX<0 || mouseX>mapWidth || mouseY<0 || mouseY>mapHeight)
-                    {
-                          //  break;;
-                           numSelectKvadr = null; 
-                    }
-                }
-
-                  
-                       
-                
-
+                //    if (mouseX<0 || mouseX>mapWidth || mouseY<0 || mouseY>mapHeight)
+                //    {
+                //          //  break;;
+                //           numSelectKvadr = null; 
+                //    }
+                //}                  
             }
 
             if (together==false)
             {
+                let dist = 15;
                 for (let i = 0; i < kvadrArr.length;i++)
                 {
                     if (i!=numSelectKvadr)
@@ -233,7 +200,7 @@ function update()
                             }
                             console.log(1);
                         }
-                        if (kvadrArr[i].y+kvadrArr[i].height>=kvadrArr[numK].y &&
+                        else if (kvadrArr[i].y+kvadrArr[i].height>=kvadrArr[numK].y &&
                             kvadrArr[i].y<kvadrArr[numK].y+kvadrArr[numK].height)
                         {
                             if (kvadrArr[i].x+kvadrArr[i].width<kvadrArr[numK].x+dist && 
