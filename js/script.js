@@ -261,42 +261,52 @@ function update()
                         if (kvadrArr[i].x+kvadrArr[i].width>=kvadrArr[numK].x &&
                             kvadrArr[i].x<kvadrArr[numK].x+kvadrArr[numK].width)
                         {
-                            if (kvadrArr[i].y+kvadrArr[i].height<kvadrArr[numK].y+dist && 
-                                kvadrArr[i].y+kvadrArr[i].height>kvadrArr[numK].y-dist)
-                            {
-                                kvadrArr[i].y = kvadrArr[numK].y - kvadrArr[numK].height;
-                                kvadrArr[i].vector = 1;
-                                kvadrArr[numK].vector = 3;
-                                together = true;
-                            }
-                            else if (kvadrArr[i].y-kvadrArr[numK].y<kvadrArr[numK].height+dist &&
-                                kvadrArr[i].y-kvadrArr[numK].y>kvadrArr[numK].height-dist)
-                            {
-                                kvadrArr[i].y = kvadrArr[numK].y+kvadrArr[numK].height;
-                                kvadrArr[i].vector = 3;
-                                kvadrArr[numK].vector = 1;
-                                together = true;
-                            }
-                           // console.log(1);
+                             if (kvadrArr[i].y+kvadrArr[i].height+dist>kvadrArr[numK].y && 
+                                kvadrArr[i].y<kvadrArr[numK].y+kvadrArr[numK].height+dist)
+                             {
+                                 if (kvadrArr[i].y>=kvadrArr[numK].y)
+                                 {
+                                    kvadrArr[i].y = kvadrArr[numK].y + kvadrArr[numK].height;
+                                    kvadrArr[i].vector = 3;
+                                    kvadrArr[numK].vector = 1; 
+                                    together = true;
+                                }
+                                else
+                                {
+
+                                    kvadrArr[i].y = kvadrArr[numK].y-kvadrArr[numK].height;
+                                    kvadrArr[i].vector = 1;
+                                    kvadrArr[numK].vector = 3;
+                                    together = true;
+                                }
+                             //
+                             }
                         }
-                        else if (kvadrArr[i].y+kvadrArr[i].height>=kvadrArr[numK].y &&
-                            kvadrArr[i].y<kvadrArr[numK].y+kvadrArr[numK].height)
+                        else  if (kvadrArr[i].y+kvadrArr[i].height>=kvadrArr[numK].y &&
+                                 kvadrArr[i].y<kvadrArr[numK].y+kvadrArr[numK].height)
                         {
-                            if (kvadrArr[i].x+kvadrArr[i].width<kvadrArr[numK].x+dist && 
-                                kvadrArr[i].x+kvadrArr[i].width>kvadrArr[numK].x-dist)
+                            if (kvadrArr[i].x+kvadrArr[i].width+dist>kvadrArr[numK].x && 
+                                kvadrArr[i].x<kvadrArr[numK].x+kvadrArr[numK].width+dist)
                             {
-                                kvadrArr[i].x = kvadrArr[numK].x - kvadrArr[numK].width;
-                                kvadrArr[i].vector = 4;
-                                kvadrArr[numK].vector = 2;
-                                together = true;
-                            }
-                            else if (kvadrArr[i].x-kvadrArr[numK].x<kvadrArr[numK].width+dist &&
-                                kvadrArr[i].x-kvadrArr[numK].x>kvadrArr[numK].width-dist)
-                            {
-                                kvadrArr[i].x = kvadrArr[numK].x+kvadrArr[numK].width;
-                                kvadrArr[i].vector = 2;
-                                kvadrArr[numK].vector = 4;
-                                together = true;
+                                console.log(10);
+                                if (kvadrArr[i].x>=kvadrArr[numK].x)
+                                {
+                                    kvadrArr[i].x = kvadrArr[numK].x + kvadrArr[numK].width;
+                                    kvadrArr[i].vector = 2;
+                                    kvadrArr[numK].vector = 4;
+                                    console.log(11);
+                                    together = true;
+                                }
+                                else
+                                //else if (kvadrArr[i].x-kvadrArr[numK].x<kvadrArr[numK].width+dist &&
+                                //    kvadrArr[i].x-kvadrArr[numK].x>kvadrArr[numK].width-dist)
+                                {
+                                    kvadrArr[i].x = kvadrArr[numK].x-kvadrArr[numK].width;
+                                    kvadrArr[i].vector = 4;
+                                    kvadrArr[numK].vector = 2;
+                                    console.log(12);
+                                    together = true;
+                                }
                             }
                            // console.log(1);
                         }
