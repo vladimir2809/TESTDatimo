@@ -59,7 +59,7 @@ function Interface() {
         }
         this.button.x = this.x + this.button.x;
         this.button.y = this.y + this.button.y;
-        console.log(this);
+       // console.log(this);
     }
     this.draw=function()
     {
@@ -155,7 +155,7 @@ function update()
           //  kvadrArr[1].x = oldX + kvadrArr[1].addX;  
             //kvadrArr[1].y = oldY + kvadrArr[1].addY;
         }
-        console.log("hello"+ num);
+     //   console.log("hello"+ num);
     }
     function calcCollision (i)
     {                    
@@ -183,7 +183,7 @@ function update()
             calcKvadr(i);
 
         }    
-        console.log(kvadrArr);
+       // console.log(kvadrArr);
     }     
     let dx = 0;
     let dy = 0;
@@ -199,7 +199,7 @@ function update()
             case 'ArrowLeft': dx = -value; break;
                        
         }
-        console.log('press dx: '+dx+' dy: '+dy);
+      //  console.log('press dx: '+dx+' dy: '+dy);
     }
     if ((numSelectKvadr!=null && grabKvadrMouse==true) || (keyDown!=null && numSelectKvadr!=null))
     {
@@ -236,7 +236,7 @@ function update()
             {
                 let flag = false;
                 let num = null;
-                console.log("begin");
+               // console.log("begin");
                 for (let i = 0; i < kvadrArr.length;i++)
                 {
                     //let value = 60;
@@ -264,7 +264,7 @@ function update()
                             num = i;
                             kvadrArr[i].rect = true;                        
                             calcCollision(num);                            
-                            console.log('rect: '+i )
+                            //console.log('rect: '+i )
                             //break;
                         }
                 }
@@ -316,13 +316,13 @@ function update()
                             if (kvadrArr[i].x+kvadrArr[i].width+dist>kvadrArr[numK].x && 
                                 kvadrArr[i].x<kvadrArr[numK].x+kvadrArr[numK].width+dist)
                             {
-                                console.log(10);
+                               // console.log(10);
                                 if (kvadrArr[i].x>=kvadrArr[numK].x)
                                 {
                                     kvadrArr[i].x = kvadrArr[numK].x + kvadrArr[numK].width;
                                     kvadrArr[i].vector = 2;
                                     kvadrArr[numK].vector = 4;
-                                    console.log(11);
+                                   // console.log(11);
                                     together = true;
                                 }
                                 else
@@ -332,7 +332,7 @@ function update()
                                     kvadrArr[i].x = kvadrArr[numK].x-kvadrArr[numK].width;
                                     kvadrArr[i].vector = 4;
                                     kvadrArr[numK].vector = 2;
-                                    console.log(12);
+                                   // console.log(12);
                                     together = true;
                                 }
                             }
@@ -421,7 +421,7 @@ window.addEventListener('mouseup', function () {
             {
                 kvadrArr[numSelectKvadr].numColor = i;
             }
-            console.log(dist);
+           // console.log(dist);
             
         }
       
@@ -445,7 +445,7 @@ document.addEventListener('mousemove', function (e) {
 });
 window.addEventListener('keydown', function () {
     keyDown=event.code;
-    console.log('hhh');
+ //   console.log('hhh');
     if (together == true && keyDown =='Space')
     {
         disconnectKvadrs();
