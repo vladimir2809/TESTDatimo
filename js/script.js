@@ -21,6 +21,7 @@ function Kvadr(x,y, numColor)  {
     this.addX = null;
     this.addY = null;
     this.rect = false;
+    this.vector = null;
     this.numColor = numColor; 
 }
 function Interface() {
@@ -182,7 +183,7 @@ function update()
         }    
         console.log(kvadrArr);
     }
-    if (/*numSelectKvadr!=null &&*/ grabKvadrMouse==true)
+    if (numSelectKvadr!=null && grabKvadrMouse==true)
     {
         let numK = numSelectKvadr;
         if (mouseLeftPress==true)
@@ -264,15 +265,19 @@ function update()
                                 kvadrArr[i].y+kvadrArr[i].height>kvadrArr[numK].y-dist)
                             {
                                 kvadrArr[i].y = kvadrArr[numK].y - kvadrArr[numK].height;
+                                kvadrArr[i].vector = 1;
+                                kvadrArr[numK].vector = 3;
                                 together = true;
                             }
                             else if (kvadrArr[i].y-kvadrArr[numK].y<kvadrArr[numK].height+dist &&
                                 kvadrArr[i].y-kvadrArr[numK].y>kvadrArr[numK].height-dist)
                             {
                                 kvadrArr[i].y = kvadrArr[numK].y+kvadrArr[numK].height;
+                                kvadrArr[i].vector = 3;
+                                kvadrArr[numK].vector = 1;
                                 together = true;
                             }
-                            console.log(1);
+                           // console.log(1);
                         }
                         else if (kvadrArr[i].y+kvadrArr[i].height>=kvadrArr[numK].y &&
                             kvadrArr[i].y<kvadrArr[numK].y+kvadrArr[numK].height)
@@ -281,15 +286,19 @@ function update()
                                 kvadrArr[i].x+kvadrArr[i].width>kvadrArr[numK].x-dist)
                             {
                                 kvadrArr[i].x = kvadrArr[numK].x - kvadrArr[numK].width;
+                                kvadrArr[i].vector = 4;
+                                kvadrArr[numK].vector = 2;
                                 together = true;
                             }
                             else if (kvadrArr[i].x-kvadrArr[numK].x<kvadrArr[numK].width+dist &&
                                 kvadrArr[i].x-kvadrArr[numK].x>kvadrArr[numK].width-dist)
                             {
                                 kvadrArr[i].x = kvadrArr[numK].x+kvadrArr[numK].width;
+                                kvadrArr[i].vector = 2;
+                                kvadrArr[numK].vector = 4;
                                 together = true;
                             }
-                            console.log(1);
+                           // console.log(1);
                         }
 
                     }
@@ -360,8 +369,13 @@ window.addEventListener('mousedown', function () {
 window.addEventListener('mouseup', function () {
     if (event.which==1)
     {
-        grabKvadrMouse = false;
+        grabKvadrMouse = false; 
+        if (checkInObj(interface.button,mouseX,mouseY)==true/* && mouseLeftPress==false*/)
+        {
+            disconnectKvadrs();
+        }
         mouseLeftPress=false;
+      
         //mouseClick=true;
         //setTimeout(function () {
         //    if (mouseClick == true) mouseClick = false;
@@ -378,6 +392,68 @@ document.addEventListener('mousemove', function (e) {
    
    // console.log(mouseX+' '+ mouseY);
 });
+function disconnectKvadrs()
+{
+    if (together==true)
+    {
+        let value = 50;
+        let mult = 2;
+        for (let i = 0; i < kvadrArr.length;i++)
+        {
+            if (kvadrArr[i].vector==1)
+            {
+                kvadrArr[i].y -= value+getRandomInt(value*mult);
+                kvadrArr[i].x += -value*mult+getRandomInt(value*mult*2);;
+            }
+            if (kvadrArr[i].vector==2)
+            {
+                kvadrArr[i].x += value+getRandomInt(value*mult);
+                kvadrArr[i].y += -value*mult+getRandomInt(value*mult*2);;
+                //kvadrArr[0].y -= value+getRandomInt(value*mult);;
+            }
+            if (kvadrArr[i].vector==3)
+            {
+                kvadrArr[i].y += value+getRandomInt(value*mult);
+                kvadrArr[i].x += -value*mult+getRandomInt(value*mult*2);;
+                //kvadrArr[0].y -= value+getRandomInt(value*mult);;
+            }
+            if (kvadrArr[i].vector==4)
+            {
+                kvadrArr[i].x -= value+getRandomInt(value*mult);
+                kvadrArr[i].y += -value*mult+getRandomInt(value*mult*2);;
+                //kvadrArr[0].y -= value+getRandomInt(value*mult);;
+            }
+        }
+        for (let i = 0; i < kvadrArr.length;i++)
+        {
+            if (kvadrArr[i].x<0 )
+            {
+                kvadrArr[i].x = 0;
+             
+
+            }
+            if (kvadrArr[i].x+kvadrArr[i].width>mapWidth)
+            {
+                kvadrArr[i].x = mapWidth-kvadrArr[i].width;
+                
+
+            }
+              if (kvadrArr[i].y<0)
+            {
+                kvadrArr[i].y = 0;
+               
+
+            }
+             if (kvadrArr[i].y+kvadrArr[i].height>mapHeight)
+            {
+                kvadrArr[i].y = mapHeight-kvadrArr[i].height;
+            
+
+            }
+        }
+        together = false;
+    }
+}
 // функция клонирования обьектов
 function clone(obj) {
     if (null == obj || "object" != typeof obj) return obj;
@@ -403,4 +479,7 @@ function checkInObj(obj,x,y)
         return true;
     }
     return false;
+}
+function getRandomInt(max) {
+  return Math.floor(Math.random() * max);
 }
