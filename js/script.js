@@ -10,6 +10,7 @@ var mauseLeftPress = false;
 var numSelectKvadr = null;
 var together = false;
 var grabKvadrMouse = false;
+let keyDown = null;
 var colors = ['rgba(255,0,0,0.5)', 'rgba(0,255,0,0.5)', 'rgba(0,0,255,0.5)'];
 var colors2 = ['rgb(255,0,0)', 'rgb(0,255,0)', 'rgb(0,0,255)'];
 var interface = null;
@@ -58,6 +59,7 @@ function Interface() {
         }
         this.button.x = this.x + this.button.x;
         this.button.y = this.y + this.button.y;
+        console.log(this);
     }
     this.draw=function()
     {
@@ -182,14 +184,40 @@ function update()
 
         }    
         console.log(kvadrArr);
+    }     
+    let dx = 0;
+    let dy = 0;
+    if (keyDown!=null)
+    {
+        value = 5;
+        switch(keyDown)
+        {
+            //'ArrowLeft','ArrowRight','ArrowUp','ArrowDown' 
+            case 'ArrowUp': dy = -value; break;
+            case 'ArrowRight': dx = value; break;
+            case 'ArrowDown': dy = +value; break;
+            case 'ArrowLeft': dx = -value; break;
+                       
+        }
+        console.log('press dx: '+dx+' dy: '+dy);
     }
-    if (numSelectKvadr!=null && grabKvadrMouse==true)
+    if ((numSelectKvadr!=null && grabKvadrMouse==true) || (keyDown!=null && numSelectKvadr!=null))
     {
         let numK = numSelectKvadr;
-        if (mouseLeftPress==true)
+ 
+        //if (mouseLeftPress==true )
         {
-            let dx = mouseX - mouseOldX;
-            let dy = mouseY - mouseOldY;
+            
+            if (keyDown==null)
+            {
+                dx = mouseX - mouseOldX;
+                dy = mouseY - mouseOldY;
+            }
+             
+            
+      
+
+           
             let flag = false;
             if (together==false)
             {
@@ -384,6 +412,19 @@ window.addEventListener('mouseup', function () {
         {
             disconnectKvadrs();
         }
+        for (let i = 0; i < interface.colorButtonArr.length;i++)
+        {
+            let clrBut = interface.colorButtonArr[i];
+            let dist = calcDist(clrBut.x, clrBut.y, mouseX, mouseY);
+            
+            if (dist<clrBut.radius)
+            {
+                kvadrArr[numSelectKvadr].numColor = i;
+            }
+            console.log(dist);
+            
+        }
+      
         mouseLeftPress=false;
       
         //mouseClick=true;
@@ -402,6 +443,42 @@ document.addEventListener('mousemove', function (e) {
    
    // console.log(mouseX+' '+ mouseY);
 });
+window.addEventListener('keydown', function () {
+    keyDown=event.code;
+    console.log('hhh');
+    if (together == true && keyDown =='Space')
+    {
+        disconnectKvadrs();
+    }
+    if (keyDown == 'Digit1')
+    {
+        numSelectKvadr=0;
+    }
+    if (keyDown == 'Digit2')
+    {
+        numSelectKvadr=1;
+    }
+    if (keyDown == 'Numpad1')
+    {
+        kvadrArr[numSelectKvadr].numColor = 0;
+    }
+    if (keyDown == 'Numpad2')
+    {
+        kvadrArr[numSelectKvadr].numColor = 1;
+    }
+    if (keyDown == 'Numpad3')
+    {
+        kvadrArr[numSelectKvadr].numColor = 2;
+    }
+
+});
+window.addEventListener('keyup', function () {
+    keyDown = null;
+});
+         //["KeyA","KeyS","KeyD","KeyW",'ArrowLeft','ArrowRight','ArrowUp','ArrowDown' ]; 
+          
+          
+              
 function disconnectKvadrs()
 {
     if (together==true)
@@ -492,4 +569,10 @@ function checkInObj(obj,x,y)
 }
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);
+}
+function calcDist(x,y,x1,y1)// посчитать дистанцию между 2 точками
+{
+    let dx=x-x1;
+    let dy=y-y1;
+    return Math.sqrt(dx*dx+dy*dy);
 }
