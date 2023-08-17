@@ -4,6 +4,7 @@ var canvas = null;
 var context = null;
 var mouseX = 0;
 var mouseY = 0;
+var mouseInCanvas = false;
 var mouseOldX = 0;
 var mouseOldY = 0;
 var mauseLeftPress = false;
@@ -88,8 +89,10 @@ function create()
 {
     canvas = document.getElementById("canvas");
     context = canvas.getContext("2d");
-    canvas.setAttribute('width',mapWidth);
-    canvas.setAttribute('height',mapHeight);
+    canvas.width = 800;// mapWidth;
+    canvas.height = 800;//mapHeight; 
+    //canvas.setAttribute('width',mapWidth);
+    //canvas.setAttribute('height',mapHeight);
     kvadrArr[0] = new Kvadr(100,100,0);
     kvadrArr[1] = new Kvadr(500,100,1);
     interface = new Interface();
@@ -97,7 +100,14 @@ function create()
 
 }
 window.addEventListener('load', function () {
-    create();
+     create();
+    canvas.addEventListener("mouseover", function () {
+        mouseInCanvas = true;
+    });
+    canvas.addEventListener("mouseout", function () {
+        mouseInCanvas = false; 
+    });
+  
 
     setInterval(function () {
         drawAll();
@@ -225,8 +235,23 @@ function update()
             
                 kvadrArr[numK].x += dx;
                 kvadrArr[numK].y += dy;
+                let flag = false;
+                for (let i = 0; i < kvadrArr.length;i++)
+                {
+                    if (i!=numSelectKvadr)
+                    {
+                        if (kvadrArr[i].x+kvadrArr[i].width>=kvadrArr[numK].x &&
+                            kvadrArr[i].x<kvadrArr[numK].x+kvadrArr[numK].width &&
+                            kvadrArr[i].y+kvadrArr[i].height>=kvadrArr[numK].y &&
+                            kvadrArr[i].y<kvadrArr[numK].y+kvadrArr[numK].height)
+                        {
+                            flag = true;
+                        }
+                    }
+                }
                 if (kvadrArr[numK].x<0 || kvadrArr[numK].x+kvadrArr[numK].width>mapWidth ||
-                    kvadrArr[numK].y<0 || kvadrArr[numK].y+kvadrArr[numK].height>mapHeight)
+                    kvadrArr[numK].y<0 || kvadrArr[numK].y+kvadrArr[numK].height>mapHeight ||
+                    flag==true)
                 {
                     kvadrArr[numK].x -= dx;
                     kvadrArr[numK].y -= dy;
@@ -297,6 +322,7 @@ function update()
                                     kvadrArr[i].y = kvadrArr[numK].y + kvadrArr[numK].height;
                                     kvadrArr[i].vector = 3;
                                     kvadrArr[numK].vector = 1; 
+                                    console.log('Down');
                                     together = true;
                                 }
                                 else
@@ -305,6 +331,7 @@ function update()
                                     kvadrArr[i].y = kvadrArr[numK].y-kvadrArr[numK].height;
                                     kvadrArr[i].vector = 1;
                                     kvadrArr[numK].vector = 3;
+                                    console.log('Up');
                                     together = true;
                                 }
                              //
@@ -322,6 +349,7 @@ function update()
                                     kvadrArr[i].x = kvadrArr[numK].x + kvadrArr[numK].width;
                                     kvadrArr[i].vector = 2;
                                     kvadrArr[numK].vector = 4;
+                                    console.log('Right');
                                    // console.log(11);
                                     together = true;
                                 }
@@ -332,6 +360,7 @@ function update()
                                     kvadrArr[i].x = kvadrArr[numK].x-kvadrArr[numK].width;
                                     kvadrArr[i].vector = 4;
                                     kvadrArr[numK].vector = 2;
+                                    console.log('Left');
                                    // console.log(12);
                                     together = true;
                                 }
@@ -433,15 +462,21 @@ window.addEventListener('mouseup', function () {
         //}, 100);
     } 
 });
+
 document.addEventListener('mousemove', function (e) {
-    let mouseOfsX=(window.innerWidth - mapWidth)/2
-    let mouseOfsY=(window.innerHeight - mapHeight)/2;
-    mouseX = (event.clientX-mouseOfsX);
-    mouseY = (event.clientY-mouseOfsY);
-    //mouseX =/*event.offsetX*/e.pageX - e.target.offsetLeft// event.x;
-    //mouseY = /*event.offsetY*/e.pageY - e.target.offsetTop//event.y;
-   
-   // console.log(mouseX+' '+ mouseY);
+    let mouseOfsX = (window.innerWidth - mapWidth)/2
+    let mouseOfsY = (window.innerHeight - mapHeight)/2;
+    //mouseX = (event.clientX-mouseOfsX);
+    //mouseY = (event.clientY-mouseOfsY);
+    if (mouseInCanvas==true)
+    {
+
+    
+        mouseX =/*event.offsetX*/e.pageX - e.target.offsetLeft// event.x;
+        mouseY = /*event.offsetY*/e.pageY - e.target.offsetTop//event.y;
+    }
+    console.log(mouseX+' '+ mouseY);
+
 });
 window.addEventListener('keydown', function () {
     keyDown=event.code;
